@@ -2,10 +2,45 @@
 
 #include "camera.h"
 #include "mouse.h"
+#include <iostream>
 
 static uint32_t window_width = 2000;
 static uint32_t window_height = 1100;
 static Camera camera({0.0f, 0.0f, 3.0f});
+
+void framebufferSizeCallback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+    window_width = width;
+    window_height = height;
+}
+
+GLFWwindow *initWindow(unsigned int width,unsigned int height)
+{
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    GLFWwindow *window = glfwCreateWindow(width, height, "opengl", NULL, NULL);
+
+    if (window == NULL)
+    {
+        std::cout << "failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return 0;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "failed to initialze GLAD" << std::endl;
+        return 0;
+    }
+
+    return window;
+}
 
 static void processingInput(GLFWwindow *window, double dt)
 {
